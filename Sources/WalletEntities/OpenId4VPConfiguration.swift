@@ -18,64 +18,69 @@
 public typealias Issuer = URL
 
 public struct OpenId4VPConfiguration: Sendable {
-  public let privateKey: SecKey
-  public let issuer: Issuer?
-  public let publicWebKeySet: WebKeySet
-  public let supportedClientIdSchemes: [SupportedClientIdPrefix]
-  public let vpFormatsSupported: [ClaimFormat]
-  public let jarConfiguration: JARConfiguration
-  public let vpConfiguration: VPConfiguration
-  public let errorDispatchPolicy: ErrorDispatchPolicy
-  public let session: Networking
-  public let responseEncryptionConfiguration: ResponseEncryptionConfiguration
-  
-  public static let SelfIssued = Issuer(string: "https://self-issued.me/v2")
-  
-  public init(
-    privateKey: SecKey,
-    issuer: Issuer? = Self.SelfIssued,
-    publicWebKeySet: WebKeySet,
-    supportedClientIdSchemes: [SupportedClientIdPrefix],
-    vpFormatsSupported: [ClaimFormat] = ClaimFormat.default(),
-    jarConfiguration: JARConfiguration = .noEncryptionOption,
-    vpConfiguration: VPConfiguration = .default(),
-    errorDispatchPolicy: ErrorDispatchPolicy = .onlyAuthenticatedClients,
-    session: Networking = Self.walletSession,
-    responseEncryptionConfiguration: ResponseEncryptionConfiguration
-  ) {
-    self.privateKey = privateKey
-    self.issuer = issuer
-    self.publicWebKeySet = publicWebKeySet
-    self.supportedClientIdSchemes = supportedClientIdSchemes
-    self.vpFormatsSupported = vpFormatsSupported
-    self.jarConfiguration = jarConfiguration
-    self.vpConfiguration = vpConfiguration
-    self.errorDispatchPolicy = errorDispatchPolicy
-    self.session = session
-    self.responseEncryptionConfiguration = responseEncryptionConfiguration
-  }
-
-  internal init() throws {
-    privateKey = try KeyController.generateRSAPrivateKey()
-    issuer = OpenId4VPConfiguration.SelfIssued
-    publicWebKeySet = WebKeySet(keys: [])
-    supportedClientIdSchemes = []
-    vpFormatsSupported = []
-    jarConfiguration = .noEncryptionOption
-    vpConfiguration = .default()
-    errorDispatchPolicy = .onlyAuthenticatedClients
-    session = URLSession.shared
-    responseEncryptionConfiguration = .unsupported
-  }
-
-  public static let walletSession: Networking = {
-    /*let delegate = SelfSignedSessionDelegate()
-     let configuration = URLSessionConfiguration.default
-     return URLSession(
-     configuration: configuration,
-     delegate: delegate,
-     delegateQueue: nil
-     )*/
-    URLSession.shared
-  }()
+    public let privateKey: SecKey
+    public let issuer: Issuer?
+    public let publicWebKeySet: WebKeySet
+    public let supportedClientIdSchemes: [SupportedClientIdPrefix]
+    public let vpFormatsSupported: [ClaimFormat]
+    public let jarConfiguration: JARConfiguration
+    public let vpConfiguration: VPConfiguration
+    public let errorDispatchPolicy: ErrorDispatchPolicy
+    public let session: Networking
+    public let responseEncryptionConfiguration: ResponseEncryptionConfiguration
+    public let ignoreCertificateValidation: Bool
+    
+    
+    public static let SelfIssued = Issuer(string: "https://self-issued.me/v2")
+    
+    public init(
+        privateKey: SecKey,
+        issuer: Issuer? = Self.SelfIssued,
+        publicWebKeySet: WebKeySet,
+        supportedClientIdSchemes: [SupportedClientIdPrefix],
+        vpFormatsSupported: [ClaimFormat] = ClaimFormat.default(),
+        jarConfiguration: JARConfiguration = .noEncryptionOption,
+        vpConfiguration: VPConfiguration = .default(),
+        errorDispatchPolicy: ErrorDispatchPolicy = .onlyAuthenticatedClients,
+        session: Networking = Self.walletSession,
+        responseEncryptionConfiguration: ResponseEncryptionConfiguration,
+        ignoreCertificateValidation: Bool = false
+    ) {
+        self.privateKey = privateKey
+        self.issuer = issuer
+        self.publicWebKeySet = publicWebKeySet
+        self.supportedClientIdSchemes = supportedClientIdSchemes
+        self.vpFormatsSupported = vpFormatsSupported
+        self.jarConfiguration = jarConfiguration
+        self.vpConfiguration = vpConfiguration
+        self.errorDispatchPolicy = errorDispatchPolicy
+        self.session = session
+        self.responseEncryptionConfiguration = responseEncryptionConfiguration
+        self.ignoreCertificateValidation = ignoreCertificateValidation
+    }
+    
+    internal init() throws {
+        privateKey = try KeyController.generateRSAPrivateKey()
+        issuer = OpenId4VPConfiguration.SelfIssued
+        publicWebKeySet = WebKeySet(keys: [])
+        supportedClientIdSchemes = []
+        vpFormatsSupported = []
+        jarConfiguration = .noEncryptionOption
+        vpConfiguration = .default()
+        errorDispatchPolicy = .onlyAuthenticatedClients
+        session = URLSession.shared
+        responseEncryptionConfiguration = .unsupported
+        ignoreCertificateValidation = false
+    }
+    
+    public static let walletSession: Networking = {
+        /*let delegate = SelfSignedSessionDelegate()
+         let configuration = URLSessionConfiguration.default
+         return URLSession(
+         configuration: configuration,
+         delegate: delegate,
+         delegateQueue: nil
+         )*/
+        URLSession.shared
+    }()
 }

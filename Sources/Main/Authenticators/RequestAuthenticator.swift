@@ -113,7 +113,11 @@ internal actor RequestAuthenticator {
     token: JWTString,
     clientId: String?
   ) async throws {
-    try await validator.validate(clientId: clientId, jwt: token)
+      try await validator.validate(
+        clientId: clientId,
+        jwt: token,
+        ignoreCertificateValidation: config.ignoreCertificateValidation
+      )
   }
   
   // Create a VP token request
