@@ -65,7 +65,8 @@ final class JarJwtSignatureValidatorTests: XCTestCase {
 
     try await validator.validate(
       clientId: clientId,
-      jwt: jws.compactSerializedString
+      jwt: jws.compactSerializedString,
+      ignoreCertificateValidation: false
     )
 
     XCTAssert(true)
@@ -100,7 +101,8 @@ final class JarJwtSignatureValidatorTests: XCTestCase {
     do {
       try await validator.validate(
         clientId: "\(scheme):\(clientId)",
-        jwt: jws.compactSerializedString
+        jwt: jws.compactSerializedString,
+      ignoreCertificateValidation: false
       )
     } catch {
       XCTAssert(false)
@@ -138,7 +140,8 @@ final class JarJwtSignatureValidatorTests: XCTestCase {
 
     try await validator.validate(
       clientId: "\(scheme):\(clientId)",
-      jwt: jws.compactSerializedString
+      jwt: jws.compactSerializedString,
+      ignoreCertificateValidation: false
     )
 
     XCTAssert(true)
