@@ -44,7 +44,7 @@ public struct OpenId4VPConfiguration: Sendable {
         errorDispatchPolicy: ErrorDispatchPolicy = .onlyAuthenticatedClients,
         session: Networking = Self.walletSession,
         responseEncryptionConfiguration: ResponseEncryptionConfiguration,
-        ignoreCertificateValidation: Bool = true
+        ignoreCertificateValidation: Bool = false
     ) {
         self.privateKey = privateKey
         self.issuer = issuer
